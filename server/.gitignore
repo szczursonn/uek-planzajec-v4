@@ -1,0 +1,15 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+.env
+/tmp
+/mock
+/internal/server/static/*
+!/internal/server/static/.gitkeep
