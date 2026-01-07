@@ -47,7 +47,6 @@ export const customBuildPlugin = (): PluginOption => {
     const getMainLocaleLabel = createLocaleBoundGetLabel('pl-pl');
     const labels = {
         appTitle: getMainLocaleLabel('common.appTitle'),
-        appTitleShort: getMainLocaleLabel('common.appTitleShort'),
         appDescription: getMainLocaleLabel('common.appDescription'),
     } as const;
 
@@ -90,7 +89,7 @@ export const customBuildPlugin = (): PluginOption => {
                 Buffer.from(
                     JSON.stringify({
                         name: labels.appTitle,
-                        short_name: labels.appTitleShort,
+                        short_name: labels.appTitle,
                         description: labels.appDescription,
                         start_url: '/?pwa=1',
                         id: 'uek-planzajec-v4',
