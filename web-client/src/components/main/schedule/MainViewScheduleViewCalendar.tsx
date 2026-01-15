@@ -1,5 +1,5 @@
+import { Fragment } from 'preact';
 import { useMemo } from 'preact/hooks';
-import { Fragment } from 'preact/jsx-runtime';
 import clsx from 'clsx';
 import { useNow } from '../../../date/useNow';
 import { DateParts } from '../../../date/dateParts';
