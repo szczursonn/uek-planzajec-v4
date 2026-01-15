@@ -48,7 +48,7 @@ export const MainViewSidebarSelectedSchedulesSection = () => {
                                     class={clsx(
                                         'truncate',
                                         !query.data && query.isLoading ? 'animate-pulse' : '',
-                                        !query.data && query.error && 'text-x-err-text',
+                                        !query.data && query.error ? 'text-x-err-text' : '',
                                     )}
                                     title={scheduleDisplayName}
                                 >
@@ -74,7 +74,13 @@ export const MainViewSidebarSelectedSchedulesSection = () => {
                                                 'main.sidebar.selectedSchedules.officialScheduleForX',
                                                 { args: [scheduleDisplayName] },
                                             )}
-                                            href={createOfficialScheduleURL(query.params.scheduleType, scheduleId)}
+                                            href={createOfficialScheduleURL(
+                                                query.params.scheduleType,
+                                                scheduleId,
+                                                query.data && !query.isLoading && !query.error
+                                                    ? query.data.resolvedPeriodIdx
+                                                    : undefined,
+                                            )}
                                         />
                                         <RoundIconButton
                                             class="h-8 p-1.25"
