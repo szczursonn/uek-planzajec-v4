@@ -35,7 +35,7 @@ export const getLabel = (
     let labelTemplate = LOCALE_TO_LABELS[locale][key];
 
     if (!labelTemplate) {
-        return key;
+        return fallback;
     }
 
     for (let i = 0; i < args.length; i++) {

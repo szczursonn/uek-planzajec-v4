@@ -173,6 +173,7 @@ export const MainViewSelectorModalGroupHeaders = ({ headers }: { headers?: reado
                             currentLocale.getLabel('main.selector.nSemester', {
                                 pluralRulesN: selectedSemester,
                                 args: [selectedSemester],
+                                fallback: '',
                             }),
                         [selectedLanguage, selectedLanguageLevel].filter(Boolean).join(' '),
                     ]

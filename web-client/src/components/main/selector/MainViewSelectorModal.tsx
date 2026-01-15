@@ -20,12 +20,14 @@ const MainViewSelectorModal = () => {
     const currentLocale = useCurrentLocale();
     const currentScheduleType = scheduleTypeGlobalState.use();
     const selectedGrouping = selectorGroupingGlobalState.use();
-    const shouldShowScheduleTypes = scheduleIdsGlobalState.use().length === 0 && !selectedGrouping;
+    const isSelectingFirstSchedule = scheduleIdsGlobalState.use().length === 0;
 
     return (
         <Modal
             title={[
-                currentLocale.getLabel(`main.selector.selectedScheduleCTA.${currentScheduleType}`),
+                currentLocale.getLabel(
+                    `main.selector.${isSelectingFirstSchedule ? 'selectScheduleCTA' : 'selectExtraScheduleCTA'}.${currentScheduleType}`,
+                ),
                 selectedGrouping,
             ]
                 .filter(Boolean)
@@ -44,7 +46,7 @@ const MainViewSelectorModal = () => {
                     />
                 )}
 
-                {shouldShowScheduleTypes && (
+                {isSelectingFirstSchedule && !selectedGrouping && (
                     <div class="flex text-center">
                         {SCHEDULE_TYPES.map((scheduleType) => (
                             <button

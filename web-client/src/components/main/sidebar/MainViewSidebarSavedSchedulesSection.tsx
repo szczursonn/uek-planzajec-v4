@@ -29,40 +29,49 @@ export const MainViewSidebarSavedSchedulesSection = () => {
     return (
         <MainViewSidebarSection title={currentLocale.getLabel('main.sidebar.savedSchedules.sectionTitle')}>
             <div class="divide-x-main-bg-4 flex flex-col divide-y-2">
-                {savedSchedules.map((savedSchedule) => (
-                    <div
-                        class={clsx(
-                            'flex w-full items-center justify-between p-1.25',
-                            savedSchedule === activeSavedSchedule ? 'bg-x-main-bg-3' : 'hover:bg-x-main-bg-3',
-                        )}
-                    >
-                        <a
-                            class="hover:underline"
-                            href={createURL(...createSavedScheduleSelectionUpdates(savedSchedule))}
-                            onClick={anchorPushStateHandler}
-                        >
-                            <span>{savedSchedule.headers.map((header) => header.name).join(', ')}</span>
+                {savedSchedules.map((savedSchedule) => {
+                    const savedScheduleDisplayName = savedSchedule.headers.map((header) => header.name).join(', ');
 
-                            {savedSchedule.hiddenSubjects.length > 0 && (
-                                <span class="text-xs">
-                                    {` + ${currentLocale.getLabel('main.nHiddenSubjects', {
-                                        pluralRulesN: savedSchedule.hiddenSubjects.length,
-                                        args: [savedSchedule.hiddenSubjects.length],
-                                    })}`}
-                                </span>
+                    return (
+                        <div
+                            class={clsx(
+                                'flex w-full items-center justify-between p-1.25',
+                                savedSchedule === activeSavedSchedule && 'bg-x-main-bg-3',
                             )}
-                        </a>
+                        >
+                            <a
+                                class="truncate hover:underline"
+                                href={createURL(...createSavedScheduleSelectionUpdates(savedSchedule))}
+                                onClick={anchorPushStateHandler}
+                                title={currentLocale.getLabel('main.sidebar.savedSchedules.selectXCTA', {
+                                    args: [savedScheduleDisplayName],
+                                })}
+                            >
+                                <span>{savedScheduleDisplayName}</span>
 
-                        <div class="text-x-main-text-muted flex">
-                            <RoundIconButton
-                                class="h-8 p-1.25"
-                                icon="cross"
-                                title={currentLocale.getLabel('main.sidebar.savedSchedules.removeCTA')}
-                                onClick={() => savedSchedulesGlobalState.remove(savedSchedule)}
-                            />
+                                {savedSchedule.hiddenSubjects.length > 0 && (
+                                    <span class="text-xs">
+                                        {` + ${currentLocale.getLabel('main.nHiddenSubjects', {
+                                            pluralRulesN: savedSchedule.hiddenSubjects.length,
+                                            args: [savedSchedule.hiddenSubjects.length],
+                                        })}`}
+                                    </span>
+                                )}
+                            </a>
+
+                            <div class="text-x-main-text-muted flex">
+                                <RoundIconButton
+                                    class="h-8 p-1.25"
+                                    icon="cross"
+                                    title={currentLocale.getLabel('main.sidebar.savedSchedules.removeXCTA', {
+                                        args: [savedScheduleDisplayName],
+                                    })}
+                                    onClick={() => savedSchedulesGlobalState.remove(savedSchedule)}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             <div class="mt-2 flex gap-2">

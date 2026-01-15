@@ -25,15 +25,15 @@ export const MainViewSelectorModalNestableLinkList = ({
 
 const NEST_LEVEL_CLASSES = [
     {
-        button: 'text-2xl md:text-3xl font-extrabold',
+        button: 'text-3xl font-extrabold',
         icon: 'h-4 w-4',
     },
     {
-        button: 'text-xl md:text-2xl font-bold',
+        button: 'text-2xl font-bold',
         icon: 'h-3.5 w-3.5',
     },
     {
-        button: 'text-lg md:text-xl font-semibold',
+        button: 'text-xl font-semibold',
         icon: 'h-3 w-3',
     },
 ];
