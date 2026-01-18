@@ -61,6 +61,7 @@
     "main.sidebar.savedSchedules.saveCTA": "Save current schedule",
     "main.sidebar.savedSchedules.removeXCTA": "Remove \"{0}\" from saved schedules",
     "main.sidebar.savedSchedules.selectXCTA": "Change current schedule to \"{0}\"",
+    "main.sidebar.savedSchedules.confirmPromptMessage": "Are you sure you want to remove \"{0}\" from saved schedules?",
     "main.sidebar.subjects.sectionTitle": "Subjects",
     "main.sidebar.subjects.showXCTA": "Show \"{0}\"",
     "main.sidebar.subjects.hideXCTA": "Hide \"{0}\"",

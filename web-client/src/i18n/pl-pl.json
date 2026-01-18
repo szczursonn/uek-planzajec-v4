@@ -61,6 +61,7 @@
     "main.sidebar.savedSchedules.saveCTA": "Zapisz obecny plan zajęć",
     "main.sidebar.savedSchedules.removeXCTA": "Usuń \"{0}\" z zapisanych planów zajęć",
     "main.sidebar.savedSchedules.selectXCTA": "Zmień obecny plan zajęć na \"{0}\"",
+    "main.sidebar.savedSchedules.confirmPromptMessage": "Czy napewno chcesz usunąć \"{0}\" z zapisanych planów zajęć?",
     "main.sidebar.subjects.sectionTitle": "Zajęcia",
     "main.sidebar.subjects.showXCTA": "Pokaż \"{0}\"",
     "main.sidebar.subjects.hideXCTA": "Ukryj \"{0}\"",

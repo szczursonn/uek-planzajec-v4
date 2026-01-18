@@ -31,6 +31,13 @@ export const MainViewSidebarSavedSchedulesSection = () => {
             <div class="divide-x-main-bg-4 flex flex-col divide-y-2">
                 {savedSchedules.map((savedSchedule) => {
                     const savedScheduleDisplayName = savedSchedule.headers.map((header) => header.name).join(', ');
+                    const savedScheduleDisplayNameHiddenSubjectsPart =
+                        savedSchedule.hiddenSubjects.length > 0
+                            ? `+ ${currentLocale.getLabel('main.nHiddenSubjects', {
+                                  pluralRulesN: savedSchedule.hiddenSubjects.length,
+                                  args: [savedSchedule.hiddenSubjects.length],
+                              })}`
+                            : '';
 
                     return (
                         <div
@@ -49,13 +56,8 @@ export const MainViewSidebarSavedSchedulesSection = () => {
                             >
                                 <span>{savedScheduleDisplayName}</span>
 
-                                {savedSchedule.hiddenSubjects.length > 0 && (
-                                    <span class="text-xs">
-                                        {` + ${currentLocale.getLabel('main.nHiddenSubjects', {
-                                            pluralRulesN: savedSchedule.hiddenSubjects.length,
-                                            args: [savedSchedule.hiddenSubjects.length],
-                                        })}`}
-                                    </span>
+                                {savedScheduleDisplayNameHiddenSubjectsPart && (
+                                    <span class="text-xs"> {savedScheduleDisplayNameHiddenSubjectsPart}</span>
                                 )}
                             </a>
 
@@ -66,7 +68,24 @@ export const MainViewSidebarSavedSchedulesSection = () => {
                                     title={currentLocale.getLabel('main.sidebar.savedSchedules.removeXCTA', {
                                         args: [savedScheduleDisplayName],
                                     })}
-                                    onClick={() => savedSchedulesGlobalState.remove(savedSchedule)}
+                                    onClick={() => {
+                                        if (
+                                            window.confirm(
+                                                currentLocale.getLabel(
+                                                    'main.sidebar.savedSchedules.confirmPromptMessage',
+                                                    {
+                                                        args: [
+                                                            savedScheduleDisplayNameHiddenSubjectsPart
+                                                                ? `${savedScheduleDisplayName} (${savedScheduleDisplayNameHiddenSubjectsPart})`
+                                                                : savedScheduleDisplayName,
+                                                        ],
+                                                    },
+                                                ),
+                                            )
+                                        ) {
+                                            savedSchedulesGlobalState.remove(savedSchedule);
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>
