@@ -108,11 +108,6 @@ func (res *responseBody) extractSchedule(requestedScheduleType ScheduleType, req
 				Extra:   strings.TrimSpace(resItem.Uwagi),
 			}
 
-			// remove language slots, who cares
-			if item.Type == "lektorat" && strings.HasSuffix(item.Subject, "grupa przedmiotów") {
-				return nil
-			}
-
 			item.Start, err = parseScheduleDate(resItem.Termin+" "+resItem.OdGodz, loc)
 			if err != nil {
 				return fmt.Errorf("failed to parse item end date: %w", err)
@@ -174,6 +169,11 @@ func (res *responseBody) extractSchedule(requestedScheduleType ScheduleType, req
 				} else {
 					item.RoomName = roomName
 				}
+			}
+
+			// remove language slots, who cares
+			if item.Type == "lektorat" && strings.Contains(item.RoomName, "Wybierz") {
+				return nil
 			}
 
 			items = append(items, item)
