@@ -25,6 +25,7 @@ export default ({ mode }: { mode: string }) => {
                     clientsClaim: true,
                     cleanupOutdatedCaches: true,
                     skipWaiting: true,
+                    globPatterns: ['**\/*.{js,wasm,css,html,svg}'],
                     runtimeCaching: [
                         {
                             // Cache Google Fonts CSS
