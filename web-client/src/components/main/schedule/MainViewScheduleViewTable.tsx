@@ -15,6 +15,8 @@ const getScheduleItemTypeCategoryClass = (category: ScheduleItemTypeCategory) =>
             return 'text-green-500';
         case 'exam':
             return 'text-red-500';
+        case 'special':
+            return 'text-violet-500';
         case 'cancelled':
         case 'reservation':
             return 'text-zinc-400';

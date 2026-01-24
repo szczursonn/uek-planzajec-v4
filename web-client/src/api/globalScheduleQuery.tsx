@@ -30,13 +30,13 @@ export const getScheduleItemTypeCategory = (itemType: string) => {
         case 'ćwiczenia audytoryjne':
         case 'ćwiczenia e-learningowe':
         case 'ćwiczenia zdalne':
+        case 'ćwiczenia do wyb. zdalne':
         case 'PPUZ ćwicz. warsztatowe':
         case 'PPUZ ćwicz. laboratoryjne':
         case 'projekt':
         case 'laboratorium':
         case 'konwersatorium':
         case 'konwersatorium do wyboru':
-        case 'seminarium':
             return 'exercise' as const;
         case 'lektorat':
         case 'PPUZ lektorat':
@@ -46,6 +46,10 @@ export const getScheduleItemTypeCategory = (itemType: string) => {
             return 'reservation' as const;
         case 'egzamin':
             return 'exam' as const;
+        case 'seminarium':
+        case 'studia podyplomowe':
+            return 'special' as const;
+
         case 'przeniesienie zajęć':
             return 'cancelled' as const;
         default:

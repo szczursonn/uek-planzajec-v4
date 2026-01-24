@@ -29,6 +29,8 @@ const getScheduleItemTypeCategoryClass = (category: ScheduleItemTypeCategory) =>
             return 'bg-green-700 border-green-900 shadow-green-700/25';
         case 'exam':
             return 'bg-red-700 border-red-900 shadow-red-700/25';
+        case 'special':
+            return 'bg-violet-700 border-violet-900 shadow-violet-700/25';
         case 'cancelled':
             return 'bg-zinc-800 border-zinc-900 text-zinc-400 shadow-zinc-800/25';
         default:

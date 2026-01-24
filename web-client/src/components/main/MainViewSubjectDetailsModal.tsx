@@ -26,6 +26,8 @@ const getItemTypeTextClass = (itemType: string) => {
             return 'text-green-400';
         case 'exam':
             return 'text-red-400';
+        case 'special':
+            return 'text-violet-400';
         default:
             return '';
     }
