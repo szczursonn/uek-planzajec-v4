@@ -67,7 +67,7 @@ const MainViewSubjectDetailsModal = ({ subject }: { subject: string }) => {
     const itemTypeInfos = useMemo(() => {
         const itemTypeToInfo = {} as Record<
             string,
-            { remainingCount: number; remainingDuration: number; totalDuration: number }
+            { remainingCount: number; remainingDuration: number; totalCount: number; totalDuration: number }
         >;
 
         for (const item of allSubjectItems) {
@@ -78,12 +78,15 @@ const MainViewSubjectDetailsModal = ({ subject }: { subject: string }) => {
             itemTypeToInfo[item.type.value] = itemTypeToInfo[item.type.value] ?? {
                 remainingCount: 0,
                 remainingDuration: 0,
+                totalCount: 0,
                 totalDuration: 0,
             };
             const itemTypeInfo = itemTypeToInfo[item.type.value]!;
+            itemTypeInfo.totalCount++;
 
             const itemDuration = item.end.date.getTime() - item.start.date.getTime();
             itemTypeInfo.totalDuration += itemDuration;
+
             if (item.end.date.getTime() > now.getTime()) {
                 itemTypeInfo.remainingCount++;
                 itemTypeInfo.remainingDuration += itemDuration;
@@ -174,8 +177,12 @@ const MainViewSubjectDetailsModal = ({ subject }: { subject: string }) => {
                     </p>
                     {itemTypeInfos.map((itemTypeInfo) => (
                         <p key={itemTypeInfo.itemType} class="text-sm">
-                            <span class="font-semibold">{`${itemTypeInfo.remainingCount}x `}</span>
-                            <span class={getItemTypeTextClass(itemTypeInfo.itemType)}>{itemTypeInfo.itemType}</span>
+                            <span class="font-semibold">
+                                {currentLocale.getLabel('common.XOutOfY', {
+                                    args: [itemTypeInfo.remainingCount, itemTypeInfo.totalCount],
+                                })}
+                            </span>
+                            <span class={getItemTypeTextClass(itemTypeInfo.itemType)}> {itemTypeInfo.itemType}</span>
                             <span>{` - ${currentLocale.getLabel('common.XOutOfY', {
                                 args: [
                                     complexLabels.durationHoursAndMinutesShort(
@@ -212,7 +219,7 @@ const MainViewSubjectDetailsModal = ({ subject }: { subject: string }) => {
                                     />
                                 )}
                             </div>
-                            <div class="mt-1 flex flex-wrap">
+                            <div class="flex flex-wrap">
                                 {lecturerInfo.itemTypes.map((itemType) => (
                                     <span
                                         class={clsx(
@@ -257,7 +264,11 @@ const MainViewSubjectDetailsModal = ({ subject }: { subject: string }) => {
             <div class="overflow-y-auto rounded-md text-xs sm:text-sm md:text-base lg:max-h-75">
                 {visibleSubjectItems.length === 0 && (
                     <p class="my-2 text-center text-base italic">
-                        {currentLocale.getLabel('main.subjectDetails.itemListEmptyMessage')}
+                        {currentLocale.getLabel(
+                            showOnlyUpcomingItems
+                                ? 'main.subjectDetails.itemListUpcomingEmptyMessage'
+                                : 'main.subjectDetails.itemListEmptyMessage',
+                        )}
                     </p>
                 )}
                 {visibleSubjectItems.map((item) => (
