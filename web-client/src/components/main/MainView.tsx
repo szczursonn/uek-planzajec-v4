@@ -4,15 +4,14 @@ import { useCurrentLocale } from '../../i18n/useCurrentLocale';
 import { TIME_ZONE } from '../../date/timeZone';
 import { createOfficialScheduleURL } from '../../api/common';
 import { GlobalScheduleQueryProvider, useGlobalScheduleQuery } from '../../api/globalScheduleQuery';
-import { useDocumentTitle } from '../../useDocumentTitle';
 import { scheduleViewGlobalState } from '../../state/localStorage/scheduleView';
-import { MainViewHeader } from './header/MainViewHeader';
 import { MainViewExportModalHost } from './MainViewExportModal';
 import { MainViewSubjectDetailsModalHost } from './MainViewSubjectDetailsModal';
 import { MainViewSelectorModalHost } from './selector/MainViewSelectorModal';
-import { ErrorAlert } from '../common/ErrorAlert';
 import { MainViewNoSchedule } from './MainViewNoSchedule';
 import { MainViewDataRefreshStatus } from './MainViewDataRefreshStatus';
+import { MainViewDocumentTitleController } from './MainViewDocumentTitleController';
+import { MainViewHeader } from './header/MainViewHeader';
 import { MainViewScheduleViewCalendar } from './schedule/MainViewScheduleViewCalendar';
 import { MainViewScheduleViewTable } from './schedule/MainViewScheduleViewTable';
 import { MainViewSidebarPWAInstallSection } from './sidebar/MainViewSidebarPWAInstallSection';
@@ -22,6 +21,7 @@ import { MainViewSidebarSubjectsSection } from './sidebar/MainViewSidebarSubject
 import { MainViewSidebarScheduleViewSection } from './sidebar/MainViewSidebarScheduleViewSection';
 import { MainViewSidebarLocalesSection } from './sidebar/MainViewSidebarLocalesSection';
 import { MainViewSidebarOtherSettingsSection } from './sidebar/MainViewSidebarOtherSettingsSection';
+import { ErrorAlert } from '../common/ErrorAlert';
 
 const SCHEDULE_VIEW_TO_CMP = {
     calendar: MainViewScheduleViewCalendar,
@@ -52,22 +52,6 @@ const MainViewActual = () => {
             document.body.classList.remove('overflow-y-scroll');
         };
     }, []);
-
-    useDocumentTitle(() => {
-        const parts = [] as string[];
-
-        if (query.data) {
-            parts.push(query.data?.resource.aggregateSchedule.headers.map((header) => header.name).join(', '));
-        } else {
-            if (query.isLoading) {
-                parts.push(currentLocale.getLabel('main.documentTitlePartLoading'));
-            }
-
-            parts.push(query.params.scheduleIds.join(', '));
-        }
-
-        return parts;
-    }, [query.data?.resource.aggregateSchedule.headers, query.isLoading, query.params.scheduleIds]);
 
     const lastUpdateDateString = useMemo(() => {
         if (!query.data) {
@@ -155,6 +139,7 @@ const MainViewActual = () => {
                     )}
                 </div>
             </div>
+            <MainViewDocumentTitleController />
         </>
     );
 };
