@@ -13,26 +13,28 @@ export const MainViewSidebarSubjectsSection = () => {
     const query = useGlobalScheduleQuery();
 
     const subjectsEntries = useMemo(() => {
-        const subjectToLecturerNameToItemCount = {} as Record<string, Record<string, number>>;
+        const subjectToSubtextPartToCount = {} as Record<string, Record<string, number>>;
+
         for (const item of query.data?.resource.aggregateSchedule.items ?? []) {
-            subjectToLecturerNameToItemCount[item.subject] = subjectToLecturerNameToItemCount[item.subject] ?? {};
-            for (const lecturer of item.lecturers) {
-                subjectToLecturerNameToItemCount[item.subject]![lecturer.name] =
-                    (subjectToLecturerNameToItemCount[item.subject]![lecturer.name] ?? 0) + 1;
+            subjectToSubtextPartToCount[item.subject] = subjectToSubtextPartToCount[item.subject] ?? {};
+            for (const part of query.params.scheduleType === 'N'
+                ? item.groups
+                : item.lecturers.map((lecturer) => lecturer.name)) {
+                subjectToSubtextPartToCount[item.subject]![part] =
+                    (subjectToSubtextPartToCount[item.subject]![part] ?? 0) + 1;
             }
         }
 
-        return Object.entries(subjectToLecturerNameToItemCount)
-            .map(([subject, lecturerNameToItemCount]) => ({
+        return Object.entries(subjectToSubtextPartToCount)
+            .map(([subject, subtextPartToCount]) => ({
                 subject,
-                lecturersDisplayList: Object.entries(lecturerNameToItemCount)
+                subtext: Object.entries(subtextPartToCount)
                     .sort(
-                        ([lecturerNameA, countA], [lecturerNameB, countB]) =>
-                            countB - countA || lecturerNameA.localeCompare(lecturerNameB),
+                        ([subtextPartA, countA], [subtextPartB, countB]) =>
+                            countB - countA || subtextPartA.localeCompare(subtextPartB),
                     )
                     .map(([lecturerName]) => lecturerName)
                     .join(', '),
-                isHidden: query.params.hiddenSubjects.includes(subject),
             }))
             .sort((a, b) => {
                 if (!a.subject) {
@@ -45,7 +47,7 @@ export const MainViewSidebarSubjectsSection = () => {
 
                 return a.subject.localeCompare(b.subject);
             });
-    }, [query.data, query.params.hiddenSubjects]);
+    }, [query.data?.resource.aggregateSchedule.items, query.params.scheduleType]);
 
     const createDerivedURL = useURLCreator();
 
@@ -54,57 +56,63 @@ export const MainViewSidebarSubjectsSection = () => {
     return (
         <MainViewSidebarSection title={currentLocale.getLabel('main.sidebar.subjects.sectionTitle')}>
             <div class="divide-x-main-bg-4 divide-y-2">
-                {subjectsEntries.map(({ subject, lecturersDisplayList, isHidden }) => (
-                    <div
-                        class={clsx(
-                            'flex items-center justify-between py-1.5 transition-opacity',
-                            isHidden && 'opacity-50 hover:opacity-100',
-                        )}
-                    >
-                        <div class="overflow-hidden">
-                            {subject ? (
-                                <p class="truncate" title={subject}>
-                                    {subject}
-                                </p>
-                            ) : (
-                                <p class="truncate italic" title={unnamedPlaceholderLabel}>
-                                    {unnamedPlaceholderLabel}
-                                </p>
-                            )}
-                            <p class="text-x-main-text-muted truncate text-xs" title={lecturersDisplayList}>
-                                {lecturersDisplayList}
-                            </p>
-                        </div>
+                {subjectsEntries.map(({ subject, subtext }) => {
+                    const isHidden = query.params.hiddenSubjects.includes(subject);
 
-                        <div class="text-x-main-text-muted flex gap-0.5">
-                            <RoundIconButton
-                                class="h-9 p-1.25"
-                                icon={isHidden ? 'eyeHide' : 'eyeShow'}
-                                title={currentLocale.getLabel(
-                                    isHidden ? 'main.sidebar.subjects.showXCTA' : 'main.sidebar.subjects.hideXCTA',
-                                    {
-                                        args: [subject || unnamedPlaceholderLabel],
-                                    },
+                    return (
+                        <div
+                            class={clsx(
+                                'flex items-center justify-between py-1.5 transition-opacity',
+                                isHidden && 'opacity-50 hover:opacity-100',
+                            )}
+                        >
+                            <div class="overflow-hidden">
+                                {subject ? (
+                                    <p class="truncate" title={subject}>
+                                        {subject}
+                                    </p>
+                                ) : (
+                                    <p class="truncate italic" title={unnamedPlaceholderLabel}>
+                                        {unnamedPlaceholderLabel}
+                                    </p>
                                 )}
-                                href={createDerivedURL(
-                                    (isHidden
-                                        ? hiddenSubjectsGlobalState.createRemoveUpdate
-                                        : hiddenSubjectsGlobalState.createAddUpdate)(subject),
-                                )}
-                                onClick={anchorPushStateHandler}
-                            />
-                            {subject && (
+                                <p class="text-x-main-text-muted truncate text-xs" title={subtext}>
+                                    {subtext}
+                                </p>
+                            </div>
+
+                            <div class="text-x-main-text-muted flex gap-0.5">
                                 <RoundIconButton
                                     class="h-9 p-1.25"
-                                    icon="info"
-                                    title={`${subject} - ${currentLocale.getLabel('main.sidebar.subjects.details')}`}
-                                    href={createDerivedURL(subjectDetailsModalSubjectGlobalState.createUpdate(subject))}
+                                    icon={isHidden ? 'eyeHide' : 'eyeShow'}
+                                    title={currentLocale.getLabel(
+                                        isHidden ? 'main.sidebar.subjects.showXCTA' : 'main.sidebar.subjects.hideXCTA',
+                                        {
+                                            args: [subject || unnamedPlaceholderLabel],
+                                        },
+                                    )}
+                                    href={createDerivedURL(
+                                        (isHidden
+                                            ? hiddenSubjectsGlobalState.createRemoveUpdate
+                                            : hiddenSubjectsGlobalState.createAddUpdate)(subject),
+                                    )}
                                     onClick={anchorPushStateHandler}
                                 />
-                            )}
+                                {subject && (
+                                    <RoundIconButton
+                                        class="h-9 p-1.25"
+                                        icon="info"
+                                        title={`${subject} - ${currentLocale.getLabel('main.sidebar.subjects.details')}`}
+                                        href={createDerivedURL(
+                                            subjectDetailsModalSubjectGlobalState.createUpdate(subject),
+                                        )}
+                                        onClick={anchorPushStateHandler}
+                                    />
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </MainViewSidebarSection>
     );
